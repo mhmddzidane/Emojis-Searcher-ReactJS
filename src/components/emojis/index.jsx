@@ -1,11 +1,25 @@
 import PropTypes from 'prop-types'
 import styles from './emojis.module.css'
 import EmojisBox from '../emojisBox/index'
+import { useEffect, useState } from 'react'
+import { filterEmojis } from '../../utils/filterEmojis'
+import Empty from '../../components/empty/index'
 
-const emojis = ({emojisData}) => {
-    return(
-        <div className={styles.emojisGrid}>
-            {emojisData.map((data,index) =>(
+const Emojis = ({emojisData, searchText}) => {
+    const [filteredEmojis, setFilteredEmojis] = useState([])
+
+    useEffect(() => {
+        setFilteredEmojis(filterEmojis({
+            emojisData,
+            searchText
+        }))
+
+    }, [emojisData, searchText])
+
+    if(filteredEmojis.length > 0){
+        return(
+            <div className={styles.emojisGrid}>
+            {filteredEmojis.map((data,index) =>(
                <EmojisBox 
                key={index} 
                title={data.title} 
@@ -13,11 +27,17 @@ const emojis = ({emojisData}) => {
                </EmojisBox>
             ))}
         </div>
-    )
+        )
+    } else{
+        return (
+            <Empty text="No Emojis Found!"/>
+        )
+    }
 }
 
-emojis.propTypes = {
-    emojisData: PropTypes.array
+Emojis.propTypes = {
+    emojisData: PropTypes.array,
+    searchText: PropTypes.string
 }
 
-export default emojis
+export default Emojis

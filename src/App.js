@@ -5,9 +5,11 @@ import Navbar from './components/navbar/index.jsx'
 import Container from './components/container/index.jsx'
 import Empty from './components/empty/index.jsx'
 import Emojis from './components/emojis/index.jsx'
+import Input from './components/input/index.jsx'
 
 function App() {
   const [emojisData, setEmojiData] = useState([])
+  const [searchText, setSearchText] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
@@ -32,17 +34,22 @@ function App() {
     fetchEmojis()
   }, [])
 
-  
+  const handleSearchEmojis = (event) => {
+    setSearchText(event.target.value)
+  }
 
   return (
     <>
       <Navbar/>
       <Container>
-        <h1>Hello, world!</h1>
+        <Input 
+        onChange={handleSearchEmojis} 
+        value={searchText}
+        />
         {loading && <Empty text="Loading..."/>}
         {error && <Empty text="Error!"/>}
 
-        {emojisData.length > 0 && <Emojis emojisData={emojisData}/>}
+        {emojisData.length > 0 && <Emojis emojisData={emojisData} searchText={searchText}/>}
       </Container>
     </>
   );
